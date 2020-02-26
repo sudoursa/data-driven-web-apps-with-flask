@@ -1,12 +1,38 @@
+import os
+import sys
+
 import flask
+
+folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, folder)
+import pypi_org.data.db_session as db_session
 
 app = flask.Flask(__name__)
 
 
 def main():
-    register_blueprints()
-    print("ran funct")
+    configure()
     app.run(debug=True)
+
+
+def configure():
+    print("Configuring Flask app:")
+
+    register_blueprints()
+    print("Registered blueprints")
+
+    setup_db()
+    print("DB setup completed.")
+    print("", flush=True)
+
+
+def setup_db():
+    db_file = os.path.join(
+        os.path.dirname(__file__),
+        'db',
+        'pypi.sqlite')
+
+    db_session.global_init(db_file)
 
 
 def register_blueprints():
@@ -22,4 +48,4 @@ def register_blueprints():
 if __name__ == '__main__':
     main()
 else:
-    register_blueprints()
+    configure()
