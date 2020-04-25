@@ -1,5 +1,6 @@
 import sqlalchemy as sa
 import sqlalchemy.orm as orm
+from sqlalchemy.orm import Session
 
 from pypi_org.data.modelbase import SqlAlchemyBase
 
@@ -27,6 +28,10 @@ def global_init(db_file: str):
     SqlAlchemyBase.metadata.create_all(engine)
 
 
-def create_session() -> orm.Session:
+def create_session() -> Session:
     global __factory
-    return __factory()
+
+    session: Session = __factory()
+    session.expire_on_commit = False
+
+    return session
